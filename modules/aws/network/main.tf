@@ -179,6 +179,7 @@ resource "aws_vpc_peering_connection" "this" {
   vpc_id        = each.value.requester_vpc_id != null ? each.value.requester_vpc_id : aws_vpc.this.id
   peer_vpc_id   = each.value.target_vpc_id
   peer_owner_id = each.value.peer_owner_id
+  auto_accept   = each.value.auto_accept
 
   tags = merge(
     {

@@ -92,6 +92,7 @@ variable "vpc_peering" {
     requester_vpc_id = optional(string)
     target_vpc_id    = optional(string)
     peer_owner_id    = optional(string)
+    auto_accept      = optional(bool, true)
   }))
   default = {}
 }
