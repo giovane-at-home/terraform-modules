@@ -1,55 +1,55 @@
 # Tags
 variable "project_name" {
-  description = "..."
+  description = "Project name"
   type        = string
   default     = null
 }
 
 variable "env" {
-  description = "...."
+  description = "Environment"
   type        = string
   default     = null
 }
 
 variable "tags" {
-  description = "..."
+  description = "General tags"
   type        = map(string)
   default     = {}
 }
 
 # VPC
 variable "vpc_cidr" {
-  description = "..."
+  description = "CIDR from VPC"
   type        = string
 }
 
 variable "instance_tenancy" {
-  description = "..."
+  description = "Instance Tenancy of VPC: [dedicated] or [default]"
   type        = string
   default     = "default"
 }
 
 variable "enable_dns_support" {
-  description = "..."
+  description = "Enable VPC DNS support"
   type        = bool
   default     = true
 }
 
 variable "enable_dns_hostnames" {
-  description = "..."
+  description = "Enable VPC DNS hostnames"
   type        = bool
   default     = false
 }
 
 variable "assign_generated_ipv6_cidr_block" {
-  description = "..."
+  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC"
   type        = bool
   default     = false
 }
 
 # Public Subnet
 variable "public_subnets" {
-  description = "..."
+  description = "Create public subnets"
   type = map(object({
     cidr_block                      = string
     availability_zone               = string
@@ -60,7 +60,7 @@ variable "public_subnets" {
 
 # Private Subnet / Nat Gateway / Private Routes
 variable "private_subnets" {
-  description = "..."
+  description = "Create private subnets"
   type = map(object({
     cidr_block                      = string
     availability_zone               = string
@@ -80,9 +80,9 @@ variable "private_subnets" {
 }
 
 variable "only_one_nat" {
-  description = "..."
+  description = "Create only 1 NAT and 1 EIP"
   type        = bool
   default     = false
 }
 
-# Peering Connection
+
