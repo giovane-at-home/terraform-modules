@@ -172,3 +172,18 @@ resource "aws_route_table_association" "this" {
   route_table_id = aws_route_table.this[each.key].id
 }
 
+# Peering VPC
+resource "aws_vpc_peering_connection" "this" {
+  for_each = var.vpc_peering
+
+  vpc_id        = each.value.requester_vpc_id != null ? each.value.requester_vpc_id : aws_vpc.this.id
+  peer_vpc_id   = each.value.target_vpc_id
+  peer_owner_id = each.value.peer_owner_id
+
+  tags = merge(
+    {
+      Name = "${var.env}-${each.key}"
+    },
+    var.tags,
+  )
+}

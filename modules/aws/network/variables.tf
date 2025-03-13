@@ -85,4 +85,13 @@ variable "only_one_nat" {
   default     = false
 }
 
-
+# Peering VPC
+variable "vpc_peering" {
+  description = "..."
+  type = map(object({
+    requester_vpc_id = optional(string)
+    target_vpc_id    = optional(string)
+    peer_owner_id    = optional(string)
+  }))
+  default = {}
+}

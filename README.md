@@ -8,3 +8,4 @@ Terraform module repository for multi-cloud deployment, starting with AWS with p
 - **Subnets**
 - **NAT Gateway**
 - **Route Tables**
+- **VPC Peering**
