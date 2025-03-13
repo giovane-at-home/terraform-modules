@@ -152,7 +152,7 @@ resource "aws_route_table" "this" {
       ipv6_cidr_block        = route.value.ipv6_cidr_block
       egress_only_gateway_id = route.value.egress_only_gateway ? aws_egress_only_internet_gateway.this.id : ""
       nat_gateway_id         = try((aws_nat_gateway.this[route.value.nat_gateway_id].id), "")
-      # vpc_peering_connection_id = try((aws_vpc_peering_connection.this[route.value.vpc_peering_connection_id].id), "")
+      vpc_peering_connection_id = try((aws_vpc_peering_connection.this[route.value.vpc_peering_connection_id].id), "")
     }
   }
 
@@ -179,7 +179,7 @@ resource "aws_vpc_peering_connection" "this" {
   vpc_id        = each.value.requester_vpc_id != null ? each.value.requester_vpc_id : aws_vpc.this.id
   peer_vpc_id   = each.value.target_vpc_id
   peer_owner_id = each.value.peer_owner_id
-  auto_accept   = each.value.auto_accept
+  auto_accept = each.value.auto_accept
 
   tags = merge(
     {
