@@ -1,21 +1,25 @@
 # Tags
 variable "project_name" {
-  type    = string
-  default = null
+  description = "Project name"
+  type        = string
+  default     = null
 }
 
 variable "env" {
-  type    = string
-  default = null
+  description = "Environment"
+  type        = string
+  default     = null
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "General tags"
+  type        = map(string)
+  default     = {}
 }
 
 # Security Group
 variable "security_groups" {
+  description = "Security Groups config"
   type = map(object({
     description = string
     vpc_id      = string
