@@ -36,6 +36,3 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-
-# temp
-temp
