@@ -20,13 +20,13 @@ variable "tags" {
 # VPC
 variable "create_vpc" {
   description = "Create VPC? {true} or {false}"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 variable "vpc_cidr" {
   description = "CIDR from VPC"
   type        = string
-  default = ""
+  default     = ""
 }
 
 variable "instance_tenancy" {
@@ -74,7 +74,7 @@ variable "private_subnets" {
     assign_ipv6_address_on_creation = optional(bool)
     ipv6_cidr_block                 = optional(string)
     connectivity_type               = optional(string) # NAT
-    routes = optional(list(object({ # RT Routes
+    routes = optional(list(object({                    # RT Routes
       cidr_block                = optional(string)
       ipv6_cidr_block           = optional(string)
       egress_only_gateway       = optional(bool, false)
@@ -106,8 +106,8 @@ variable "vpc_peerings_routes" {
   description = "..."
   type = map(object({
     route_table_id = optional(string)
-    cidr_block = optional(string)
-    peering_key = optional(string)
+    cidr_block     = optional(string)
+    peering_key    = optional(string)
   }))
   default = {}
 }

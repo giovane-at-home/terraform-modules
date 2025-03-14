@@ -3,9 +3,8 @@ locals {
   sorted_private_subnet_keys = sort(keys(var.private_subnets))
 
   only_one_resource = var.only_one_nat ? (
-    length(local.sorted_private_subnet_keys) > 0 ? {
-      (local.sorted_private_subnet_keys[0]) = var.private_subnets[local.sorted_private_subnet_keys[0]]
-    } : {}
+    length(local.sorted_private_subnet_keys) > 0 ? 
+    {(local.sorted_private_subnet_keys[0]) = var.private_subnets[local.sorted_private_subnet_keys[0]]} : {}
   ) : var.private_subnets
 }
 
@@ -186,9 +185,9 @@ resource "aws_route_table_association" "this" {
 resource "aws_vpc_peering_connection" "this" {
   for_each = var.vpc_peerings
 
-  vpc_id        = each.value.requester_vpc_id
-  peer_vpc_id   = each.value.target_vpc_id
-  auto_accept   = each.value.auto_accept
+  vpc_id      = each.value.requester_vpc_id
+  peer_vpc_id = each.value.target_vpc_id
+  auto_accept = each.value.auto_accept
 
   tags = merge(
     {
@@ -201,8 +200,8 @@ resource "aws_vpc_peering_connection" "this" {
 resource "aws_route" "peering_routes" {
   for_each = var.vpc_peerings_routes
 
-  route_table_id         = each.value.route_table_id
-  destination_cidr_block = each.value.cidr_block
+  route_table_id            = each.value.route_table_id
+  destination_cidr_block    = each.value.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.this[each.value.peering_key].id
 
 }
