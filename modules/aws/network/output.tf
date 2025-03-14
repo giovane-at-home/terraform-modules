@@ -57,4 +57,7 @@ output "natgw_public_ip" {
   value = { for k, natgw in aws_nat_gateway.this : k => natgw.public_ip }
 }
 
-# 
+# Peering VPC
+output "vpc_peering_id" {
+  value = { for k, peering in aws_vpc_peering_connection.this : k => peering.id }
+}
