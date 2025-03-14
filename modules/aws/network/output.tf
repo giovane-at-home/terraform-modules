@@ -1,14 +1,6 @@
 # VPC
 output "vpc_id" {
-  value = aws_vpc.this.id
-}
-
-output "vpc_arn" {
-  value = aws_vpc.this.arn
-}
-
-output "default_vpc_sg" {
-  value = aws_vpc.this.default_security_group_id
+  value = try(aws_vpc.this[0].id, "")
 }
 
 # Public Subnet
@@ -31,16 +23,12 @@ output "private_subnet_arn" {
 
 # IGW
 output "igw_id" {
-  value = aws_internet_gateway.this.id
-}
-
-output "igw_arn" {
-  value = aws_internet_gateway.this.arn
+  value = try(aws_internet_gateway.this[0].id, "")
 }
 
 # EIGW
 output "eigw_id" {
-  value = aws_egress_only_internet_gateway.this
+  value = try(aws_egress_only_internet_gateway.this[0].id, "")
 }
 
 # EIP

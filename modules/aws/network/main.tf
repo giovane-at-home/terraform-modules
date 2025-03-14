@@ -11,6 +11,8 @@ locals {
 
 # Create VPC
 resource "aws_vpc" "this" {
+  count = var.create_vpc ? 1 : 0
+
   cidr_block                       = var.vpc_cidr
   instance_tenancy                 = var.instance_tenancy
   enable_dns_support               = var.enable_dns_support
@@ -28,7 +30,7 @@ resource "aws_vpc" "this" {
 resource "aws_subnet" "public" {
   for_each = var.public_subnets
 
-  vpc_id                          = aws_vpc.this.id
+  vpc_id                          = aws_vpc.this[0].id
   cidr_block                      = each.value.cidr_block
   availability_zone               = each.value.availability_zone
   assign_ipv6_address_on_creation = each.value.assign_ipv6_address_on_creation
@@ -47,7 +49,7 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   for_each = var.private_subnets
 
-  vpc_id                          = aws_vpc.this.id
+  vpc_id                          = aws_vpc.this[0].id
   cidr_block                      = each.value.cidr_block
   availability_zone               = each.value.availability_zone
   assign_ipv6_address_on_creation = each.value.assign_ipv6_address_on_creation
@@ -64,7 +66,9 @@ resource "aws_subnet" "private" {
 
 # Internet Gateway
 resource "aws_internet_gateway" "this" {
-  vpc_id = aws_vpc.this.id
+  count = var.create_vpc ? 1 : 0
+
+  vpc_id = aws_vpc.this[0].id
 
   tags = merge(
     {
@@ -76,11 +80,13 @@ resource "aws_internet_gateway" "this" {
 
 # Default Route Table (Public)
 resource "aws_default_route_table" "this" {
-  default_route_table_id = aws_vpc.this.default_route_table_id
+  count = var.create_vpc ? 1 : 0
+
+  default_route_table_id = aws_vpc.this[0].default_route_table_id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.this.id
+    gateway_id = aws_internet_gateway.this[0].id
   }
 
   tags = merge(
@@ -93,8 +99,10 @@ resource "aws_default_route_table" "this" {
 
 # Default Route Table Association (Public)
 resource "aws_main_route_table_association" "this" {
-  vpc_id         = aws_vpc.this.id
-  route_table_id = aws_default_route_table.this.id
+  count = var.create_vpc ? 1 : 0
+
+  vpc_id         = aws_vpc.this[0].id
+  route_table_id = aws_default_route_table.this[0].id
 }
 
 # Elastic IP
@@ -129,7 +137,9 @@ resource "aws_nat_gateway" "this" {
 
 # Egress Only Internet Gateway
 resource "aws_egress_only_internet_gateway" "this" {
-  vpc_id = aws_vpc.this.id
+  count = var.create_vpc ? 1 : 0
+
+  vpc_id = aws_vpc.this[0].id
 
   tags = merge(
     {
@@ -143,14 +153,14 @@ resource "aws_egress_only_internet_gateway" "this" {
 resource "aws_route_table" "this" {
   for_each = var.private_subnets
 
-  vpc_id = aws_vpc.this.id
+  vpc_id = aws_vpc.this[0].id
 
   dynamic "route" {
     for_each = coalesce(try(each.value.routes, []), [])
     content {
       cidr_block                = route.value.cidr_block
       ipv6_cidr_block           = route.value.ipv6_cidr_block
-      egress_only_gateway_id    = route.value.egress_only_gateway ? aws_egress_only_internet_gateway.this.id : ""
+      egress_only_gateway_id    = route.value.egress_only_gateway ? aws_egress_only_internet_gateway.this[0].id : ""
       nat_gateway_id            = try((aws_nat_gateway.this[route.value.nat_gateway_id].id), "")
       vpc_peering_connection_id = try((aws_vpc_peering_connection.this[route.value.vpc_peering_connection_id].id), route.value.vpc_peering_connection_id)
     }
@@ -176,7 +186,7 @@ resource "aws_route_table_association" "this" {
 resource "aws_vpc_peering_connection" "this" {
   for_each = var.vpc_peering
 
-  vpc_id        = coalesce(each.value.requester_vpc_id, aws_vpc.this.id)
+  vpc_id        = coalesce(each.value.requester_vpc_id, aws_vpc.this[0].id)
   peer_vpc_id   = each.value.target_vpc_id
   peer_owner_id = each.value.peer_owner_id
   auto_accept   = each.value.auto_accept

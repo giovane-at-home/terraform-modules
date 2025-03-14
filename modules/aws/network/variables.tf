@@ -18,9 +18,15 @@ variable "tags" {
 }
 
 # VPC
+variable "create_vpc" {
+  description = "Create VPC? {true} or {false}"
+  type = bool
+  default = true
+}
 variable "vpc_cidr" {
   description = "CIDR from VPC"
   type        = string
+  default = ""
 }
 
 variable "instance_tenancy" {
@@ -56,6 +62,7 @@ variable "public_subnets" {
     assign_ipv6_address_on_creation = optional(bool)
     ipv6_cidr_block                 = optional(string)
   }))
+  default = {}
 }
 
 # Private Subnet / Nat Gateway / Private Routes
