@@ -3,8 +3,8 @@ locals {
   sorted_private_subnet_keys = sort(keys(var.private_subnets))
 
   only_one_resource = var.only_one_nat ? (
-    length(local.sorted_private_subnet_keys) > 0 ? 
-    {(local.sorted_private_subnet_keys[0]) = var.private_subnets[local.sorted_private_subnet_keys[0]]} : {}
+    length(local.sorted_private_subnet_keys) > 0 ?
+    { (local.sorted_private_subnet_keys[0]) = var.private_subnets[local.sorted_private_subnet_keys[0]] } : {}
   ) : var.private_subnets
 }
 
