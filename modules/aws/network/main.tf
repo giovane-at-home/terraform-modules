@@ -184,11 +184,10 @@ resource "aws_route_table_association" "this" {
 
 # Peering VPC
 resource "aws_vpc_peering_connection" "this" {
-  for_each = var.vpc_peering
+  for_each = var.vpc_peerings
 
-  vpc_id        = coalesce(each.value.requester_vpc_id, aws_vpc.this[0].id)
-  peer_vpc_id   = coalesce(each.value.target_vpc_id, aws_vpc.this[0].id)
-  peer_owner_id = coalesce(each.value.peer_owner_id, aws_vpc.this[0].id)
+  vpc_id        = each.value.requester_vpc_id
+  peer_vpc_id   = each.value.target_vpc_id
   auto_accept   = each.value.auto_accept
 
   tags = merge(
@@ -197,4 +196,13 @@ resource "aws_vpc_peering_connection" "this" {
     },
     var.tags,
   )
+}
+
+resource "aws_route" "peering_routes" {
+  for_each = var.vpc_peerings_routes
+
+  route_table_id         = each.value.route_table_id
+  destination_cidr_block = each.value.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.this[each.value.peering_key].id
+
 }

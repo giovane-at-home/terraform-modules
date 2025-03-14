@@ -45,6 +45,11 @@ output "natgw_public_ip" {
   value = { for k, natgw in aws_nat_gateway.this : k => natgw.public_ip }
 }
 
+# Route Table (Private)
+output "route_table_id" {
+  value = { for k, rt in aws_aws_route_table.this : k => r.route_table_id}
+}
+
 # Peering VPC
 output "vpc_peering_id" {
   value = { for k, peering in aws_vpc_peering_connection.this : k => peering.id }

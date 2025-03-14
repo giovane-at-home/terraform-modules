@@ -74,7 +74,6 @@ variable "private_subnets" {
     assign_ipv6_address_on_creation = optional(bool)
     ipv6_cidr_block                 = optional(string)
     connectivity_type               = optional(string) # NAT
-    # pub_subnet_key                  = optional(string) # NAT
     routes = optional(list(object({ # RT Routes
       cidr_block                = optional(string)
       ipv6_cidr_block           = optional(string)
@@ -93,13 +92,22 @@ variable "only_one_nat" {
 }
 
 # Peering VPC
-variable "vpc_peering" {
+variable "vpc_peerings" {
   description = "..."
   type = map(object({
     requester_vpc_id = optional(string)
     target_vpc_id    = optional(string)
-    peer_owner_id    = optional(string)
     auto_accept      = optional(bool, true)
+  }))
+  default = {}
+}
+
+variable "vpc_peerings_routes" {
+  description = "..."
+  type = map(object({
+    route_table_id = optional(string)
+    cidr_block = optional(string)
+    peering_key = optional(string)
   }))
   default = {}
 }
