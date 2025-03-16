@@ -22,7 +22,7 @@ variable "ec2_instances" {
   type = map(object({
     ami_instance                = string
     instance_type               = string
-    associate_public_ip_address = option(bool, false)
+    associate_public_ip_address = optional(bool, false)
     sg_id                       = list(string)
     availability_zone           = optional(string)
     subnet_id                   = optional(string)
