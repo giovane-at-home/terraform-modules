@@ -77,33 +77,6 @@ resource "aws_internet_gateway" "this" {
   )
 }
 
-# Default Route Table (Public)
-resource "aws_default_route_table" "this" {
-  count = var.create_vpc ? 1 : 0
-
-  default_route_table_id = aws_vpc.this[0].default_route_table_id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.this[0].id
-  }
-
-  dynamic "route" {
-    for_each = length(aws_egress_only_internet_gateway.this) > 0 ? [aws_egress_only_internet_gateway.this[0].id] : []
-    content {
-      ipv6_cidr_block        = "::/0"
-      egress_only_gateway_id = route.value
-    }
-  }
-
-  tags = merge(
-    {
-      Name = "${var.env}${var.project_name != null ? "-${var.project_name}" : ""}-pub-rt"
-    },
-    var.tags,
-  )
-}
-
 # Default Route Table Association (Public)
 resource "aws_main_route_table_association" "this" {
   count = var.create_vpc ? 1 : 0
@@ -212,4 +185,31 @@ resource "aws_route" "peering_routes" {
   destination_cidr_block    = each.value.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.this[each.value.peering_key].id
 
+}
+
+# Default Route Table (Public)
+resource "aws_default_route_table" "this" {
+  count = var.create_vpc ? 1 : 0
+
+  default_route_table_id = aws_vpc.this[0].default_route_table_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.this[0].id
+  }
+
+  dynamic "route" {
+    for_each = length(aws_egress_only_internet_gateway.this) > 0 ? [aws_egress_only_internet_gateway.this[0].id] : []
+    content {
+      ipv6_cidr_block        = "::/0"
+      egress_only_gateway_id = route.value
+    }
+  }
+
+  tags = merge(
+    {
+      Name = "${var.env}${var.project_name != null ? "-${var.project_name}" : ""}-pub-rt"
+    },
+    var.tags,
+  )
 }
