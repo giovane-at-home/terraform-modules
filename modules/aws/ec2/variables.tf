@@ -23,7 +23,7 @@ variable "ec2_instances" {
     ami_instance                = string
     instance_type               = string
     associate_public_ip_address = optional(bool, false)
-    sg_id                       = list(string)
+    sg_ids                      = list(string)
     availability_zone           = optional(string)
     subnet_id                   = optional(string)
     key_name                    = optional(string)
