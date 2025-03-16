@@ -88,6 +88,14 @@ resource "aws_default_route_table" "this" {
     gateway_id = aws_internet_gateway.this[0].id
   }
 
+  dynamic "route" {
+    for_each = length(aws_egress_only_internet_gateway.this) > 0 ? [aws_egress_only_internet_gateway.this[0].id] : []
+    content {
+      ipv6_cidr_block        = "::/0"
+      egress_only_gateway_id = route.value
+    }
+  }
+
   tags = merge(
     {
       Name = "${var.env}${var.project_name != null ? "-${var.project_name}" : ""}-pub-rt"
