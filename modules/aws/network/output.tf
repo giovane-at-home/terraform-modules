@@ -45,6 +45,11 @@ output "natgw_public_ip" {
   value = { for k, natgw in aws_nat_gateway.this : k => natgw.public_ip }
 }
 
+# Default Route Table (Public)
+output "default_route_table_id" {
+  value = { for k, rt in aws_default_route_table.this : k => rt.id }
+}
+
 # Route Table (Private)
 output "route_table_id" {
   value = { for k, rt in aws_route_table.this : k => rt.id }
