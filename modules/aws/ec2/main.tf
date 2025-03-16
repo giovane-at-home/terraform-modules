@@ -9,6 +9,7 @@ resource "aws_instance" "this" {
   subnet_id                   = each.value.subnet_id
   key_name                    = each.value.key_name
   iam_instance_profile        = each.value.iam_instance_profile
+  hibernation                 = each.value.hibernation
   # ebs_block_device
   # launch_template
   # user_data
