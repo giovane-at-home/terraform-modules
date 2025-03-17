@@ -66,6 +66,11 @@ variable "public_subnets" {
 }
 
 # Private Subnet / Nat Gateway / Private Routes
+variable "create_natgw" {
+  description = "Create Nat Gateway? [true] or [false]"
+  type = bool
+  default = true
+}
 variable "private_subnets" {
   description = "Create private subnets"
   type = map(object({

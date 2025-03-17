@@ -77,17 +77,9 @@ resource "aws_internet_gateway" "this" {
   )
 }
 
-# Default Route Table Association (Public)
-resource "aws_main_route_table_association" "this" {
-  count = var.create_vpc ? 1 : 0
-
-  vpc_id         = aws_vpc.this[0].id
-  route_table_id = aws_default_route_table.this[0].id
-}
-
 # Elastic IP
 resource "aws_eip" "this" {
-  for_each = local.only_one_resource
+  for_each = var.create_natgw ? aws_subnet.private : {}
 
   domain = "vpc"
 
@@ -101,7 +93,7 @@ resource "aws_eip" "this" {
 
 # NAT Gateway
 resource "aws_nat_gateway" "this" {
-  for_each = local.only_one_resource
+  for_each = var.create_natgw ? aws_subnet.private : {}
 
   allocation_id     = aws_eip.this[each.key].id
   connectivity_type = each.value.connectivity_type
@@ -212,4 +204,12 @@ resource "aws_default_route_table" "this" {
     },
     var.tags,
   )
+}
+
+# Default Route Table Association (Public)
+resource "aws_main_route_table_association" "this" {
+  count = var.create_vpc ? 1 : 0
+
+  vpc_id         = aws_vpc.this[0].id
+  route_table_id = aws_default_route_table.this[0].id
 }
