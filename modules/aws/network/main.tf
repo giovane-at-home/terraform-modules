@@ -96,7 +96,7 @@ resource "aws_nat_gateway" "this" {
   for_each = var.create_natgw ? aws_subnet.private : {}
 
   allocation_id     = aws_eip.this[each.key].id
-  connectivity_type = each.value.connectivity_type
+  # connectivity_type = each.value.connectivity_type
   subnet_id         = aws_subnet.public[local.sorted_public_subnet_keys[0]].id
 
   tags = merge(

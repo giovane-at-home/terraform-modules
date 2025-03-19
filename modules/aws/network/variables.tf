@@ -78,7 +78,7 @@ variable "private_subnets" {
     availability_zone               = string
     assign_ipv6_address_on_creation = optional(bool)
     ipv6_cidr_block                 = optional(string)
-    connectivity_type               = optional(string) # NAT
+    # connectivity_type               = optional(string) # NAT
     routes = optional(list(object({                    # RT Routes
       cidr_block                = optional(string)
       ipv6_cidr_block           = optional(string)
